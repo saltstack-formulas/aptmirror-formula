@@ -1,0 +1,27 @@
+---
+driver:
+  name: vagrant
+
+platforms:
+  - name: ubuntu-14.04
+
+provisioner:
+  name: salt_solo
+  formula: mounts
+  salt_copy_filter:
+    - .git
+    - .kitchen
+  pillars-from-files:
+    aptmirror.sls: pillar.example.sls
+  pillars:
+    top.sls:
+      base:
+        '*':
+          - aptmirror
+  state_top:
+    base:
+      '*':
+        - aptmirror
+
+suites:
+  - name: default
