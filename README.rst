@@ -15,7 +15,7 @@ Available states
 ``aptmirror``
 ----------
 
-Mirrors apt repositories
+Mirrors apt repositories to a local directory. Once mirrored you will need to combine with a method of access like a web server or ftp server pointing at the local directory.
 
 Testing
 =======
