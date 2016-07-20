@@ -1,0 +1,12 @@
+{% set aptmirror = salt.pillar.get('aptmirror', {
+  'cron': {
+    'hour': '2',
+    'minute': '0',
+    'daymonth': '*',
+    'month': '*',
+    'dayweek': '*',
+    'identifier': 'APTMIRROR'
+  },
+}, merge=True)
+
+%}

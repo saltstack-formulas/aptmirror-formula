@@ -1,0 +1,35 @@
+{%- from 'aptmirror/map.jinja' import aptmirror with context -%}
+## This file is managed by SaltStack ##
+##     DO NOT MAKE LOCAL CHANGES!    ##
+## This file is managed by SaltStack ##
+
+############# config ##################
+#
+set defaultarch         {{ aptmirror.get('defaultarch', salt.grains.get('osarch')) }}
+set base_path           {{ aptmirror.get('base_path', '/var/spool/apt-mirror') }}
+set mirror_path         {{ aptmirror.get('mirror_path', '$base_path/mirror') }}
+set skel_path           {{ aptmirror.get('skel_path', '$base_path/skel') }}
+set var_path            {{ aptmirror.get('var_path', '$base_path/var') }}
+{%- if 'cleanscript' in aptmirror %}
+set cleanscript         {{ aptmirror.get('cleanscript', '$var_path/clean.sh') }}
+{%- endif %}
+{%- if 'postmirror_script' in aptmirror %}
+set postmirror_script   {{ aptmirror.get('postmirror_script') }}
+{%- endif %}
+set nthreads            {{ aptmirror.get('threads', '20') }}
+set _tilde              {{ aptmirror.get('tilde', '0') }}
+#
+############# end config ##############
+{%- for mirror_name, mirror in aptmirror.get('mirrors').items() %}
+# {{ mirror_name }}
+  {%- for release_name, release in mirror.get('releases').items() %}
+    {%- for arch in release.get('arch', ['amd64']) %}
+      {%- if arch == 'all' %}
+        {%- set deb = 'deb' %}
+      {%- else %}
+        {%- set deb = 'deb-' + arch %}
+      {%- endif %}
+{{ deb }} {{ release.get('url') }} {{ release_name }}{% for comp in release.get('comps') %} {{ comp }}{% endfor %}
+    {%- endfor %}
+  {%- endfor %}
+{%- endfor %}
